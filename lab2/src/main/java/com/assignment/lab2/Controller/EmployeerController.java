@@ -41,7 +41,7 @@ public class EmployeerController {
      public ResponseEntity<?> addNewUser(
     		 @RequestParam(value="name",required = true) String name, 
     		 @RequestParam(value="description", required=true) String description, 
-    		 @RequestParam("street") String street, @RequestParam("city") String city, @RequestParam("state") String state,
+    		 @RequestParam(value="street",required=true) String street, @RequestParam("city") String city, @RequestParam("state") String state,
     		 @RequestParam("zip") String zip) {
 		 
 		 
