@@ -20,7 +20,7 @@ import com.assignment.lab2.service.EmployerService;
 
 @RestController
 @RequestMapping("/")
-@ResponseStatus(HttpStatus.NOT_FOUND)
+//@ResponseStatus(HttpStatus.NOT_FOUND)
 @CrossOrigin(origins = "*")
 public class EmployeerController {
 	
@@ -33,12 +33,14 @@ public class EmployeerController {
 
 //	@GetMapping("/hello")
 //	public String hello() {
-//		Employee emp = new Employee();
+//		Employee emp = new Employee();  
 //		emp.setName("ABC");
 //		return "HelloAish";
 //	}
 	 @RequestMapping(value = "employer", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-     public ResponseEntity<?> addNewUser(@RequestParam(value="name",required = false) String name, @RequestParam("description") String description, 
+     public ResponseEntity<?> addNewUser(
+    		 @RequestParam(value="name",required = true) String name, 
+    		 @RequestParam(value="description", required=true) String description, 
     		 @RequestParam("street") String street, @RequestParam("city") String city, @RequestParam("state") String state,
     		 @RequestParam("zip") String zip) {
 		 

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 
 public class EmployerEntity {
-	
+	@JsonIgnoreProperties({"Name"})
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
@@ -22,14 +22,16 @@ public class EmployerEntity {
 
 
 	@Column
-	@JsonIgnoreProperties({"Name"})
+	
 	@JsonProperty("Name")
     private String name;
 	
 	@Column
+	@JsonProperty("Description")
     private String description;
 	
     @Embedded
+    @JsonProperty("Address")
     private AddressEntity address;
     
     

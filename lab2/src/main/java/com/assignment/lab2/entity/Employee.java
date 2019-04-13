@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 @Entity
@@ -29,19 +30,27 @@ public class Employee {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	
 	@Column
+	@JsonProperty("Name")
     private String name;
+	
 	@Column
+	@JsonProperty("Email")
     private String email;
+	
 	@Column
+	@JsonProperty("Title")
     private String title;
 	
 		
 	@Embedded
+	@JsonProperty("Address")
     private AddressEntity address;
+	
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(referencedColumnName="id")
-    private EmployerEntity employer;
+	@JsonIgnoreProperties(value = {"Description","Address"})
+	private EmployerEntity employer;
     
     
 	@ManyToOne(cascade={CascadeType.ALL})

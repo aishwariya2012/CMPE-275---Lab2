@@ -2,11 +2,12 @@ package com.assignment.lab2.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 
 
-
-@Embeddable
+@Embeddable @Access(AccessType.FIELD)
 public class AddressEntity {
 	
 	@Column
