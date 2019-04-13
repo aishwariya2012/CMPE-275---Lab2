@@ -40,9 +40,11 @@ public class EmployeerController {
 	 @RequestMapping(value = "employer", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
      public ResponseEntity<?> addNewUser(
     		 @RequestParam(value="name",required = true) String name, 
-    		 @RequestParam(value="description", required=true) String description, 
-    		 @RequestParam(value="street",required=true) String street, @RequestParam("city") String city, @RequestParam("state") String state,
-    		 @RequestParam("zip") String zip) {
+    		 @RequestParam(value="description", required=false) String description, 
+    		 @RequestParam(value="street",required=false) String street,
+    		 @RequestParam(value="city",required=false) String city, 
+    		 @RequestParam(value="state",required=false) String state,
+    		 @RequestParam(value="zip", required=false) String zip) {
 		 
 		 
 		 if(name==null) {
