@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,8 +59,7 @@ public class EmployeeController {
 		        Employee ManagerDetails = null;
 		        EmployerEntity employer = this.EmployerService.GetEmployer(EmployerID);
 		        System.out.print(employer);
-		        if(employer==null)
-		        	return new ResponseEntity<>("Not A Valid Employeerearlier",HttpStatus.BAD_REQUEST);
+		       
 		        if(ManagerID!=null) {
 		        	 ManagerDetails = this.EmployeeService.GetEmployee(ManagerID);
 		        	Long id = ManagerDetails.getEmployer().getId();
@@ -78,9 +79,9 @@ public class EmployeeController {
 		        }
 	}
 	
-	@RequestMapping(value="employee", method=RequestMethod.GET, produces =MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="employee/{id}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> GetEmployeeDetails(
-			@RequestParam(value="id",required = true) Long id)
+			@PathVariable(required = true) Long id)
 	{
 		try {
 			Employee temp =this.EmployeeService.GetEmployee(id) ;
