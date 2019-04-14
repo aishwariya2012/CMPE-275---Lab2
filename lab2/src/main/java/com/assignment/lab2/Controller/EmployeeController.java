@@ -71,7 +71,7 @@ public class EmployeeController {
 		        System.out.print(employer);
 		       
 		        if(ManagerID!=null) {
-		        	 ManagerDetails = this.EmployeeService.GetEmployee(ManagerID).get();
+		        	 ManagerDetails = this.EmployeeService.GetEmployee(ManagerID);
 		        	Long id = ManagerDetails.getEmployer().getId();
 		        	if(id != EmployerID ) {
 		        		return new ResponseEntity<>("Manager Id Not Valid",HttpStatus.BAD_REQUEST);
@@ -98,8 +98,8 @@ public class EmployeeController {
 			@PathVariable(required = true) Long id)
 	{
 		try {
-			Optional<Employee> temp =this.EmployeeService.GetEmployee(id) ;
-			return new ResponseEntity<Employee>(temp.get(),HttpStatus.OK);
+			Employee temp =this.EmployeeService.GetEmployee(id) ;
+			return new ResponseEntity<Employee>(temp,HttpStatus.OK);
 					
 		}catch(NoSuchElementException e) {
 			return new ResponseEntity<>("Employee Not Found,Enter A Valid Value",HttpStatus.NOT_FOUND);
@@ -122,12 +122,9 @@ public class EmployeeController {
 			 )
 	{
 		try {
-		   Optional <Employee> temp = this.EmployeeService.GetEmployee(id);
-		    if(!temp.isPresent()) {
-		    	return new ResponseEntity<>("Employee Not Found,Enter A Valid Value",HttpStatus.NOT_FOUND);
-		    }
+		   
 		    
-		    Employee temp1 = temp.get();
+		    Employee temp1 = this.EmployeeService.GetEmployee(id);
 		    if(name!=null && name!=temp1.getName() ) {
 		    	temp1.setName(name);
 		    }
@@ -156,17 +153,35 @@ public class EmployeeController {
 		    }
 		    
 		    //To change a Manager of a Employee if the employer is still the same
-	    	if( (ManagerID!=null) && (ManagerID != temp1.getManager().getId())  && (EmployerID==temp1.getEmployer().getId())) {
-	    		Employee NewManager = this.EmployeeService.GetEmployee(ManagerID).get();
-	    		Long EmployerIDManager = NewManager.getEmployer().getId();
-	    		if(EmployerIDManager != EmployerID) {
-	    			 return new ResponseEntity<>("The Manager doesnot belong to same company",HttpStatus.BAD_REQUEST);
-	    		}
-	    		else {
-	    			temp1.setManager(NewManager);
-	    		}
-	    	}
-	    	
+		
+    	    if(ManagerID!=null) {
+    	    	
+    	        Employee NewManager = this.EmployeeService.GetEmployee(ManagerID);
+    	    	Long EmployerIDManager = NewManager.getEmployer().getId();
+    		   
+		    		if(temp1.getManager()==null) {
+		    			
+		    			if(EmployerID==temp1.getEmployer().getId() && EmployerIDManager==EmployerID)
+		    			temp1.setManager(NewManager);
+		    			else {
+		    				 return new ResponseEntity<>("The Manager doesnot belong to same company",HttpStatus.BAD_REQUEST);
+		    			}
+		    				
+		    		}
+    		      else {
+    		    	  
+    		    	 	Long value=temp1.getManager().getId();
+    		            if(ManagerID!=value && EmployerID==temp1.getEmployer().getId()) {
+    			  
+				    		   if(EmployerIDManager != EmployerID) {
+					    			 return new ResponseEntity<>("The Manager doesnot belong to same company",HttpStatus.BAD_REQUEST);
+					    		}
+					    		else {
+					    			temp1.setManager(NewManager);
+					    		}
+	    	                  }
+    		            }
+    	         }
 		  
 		    
 		    //CHange the employees EMployer
@@ -174,7 +189,7 @@ public class EmployeeController {
 		    	
 		    	System.out.println("INside thiS block");
 		    	
-		    	
+		    	         Employee NewManager = this.EmployeeService.GetEmployee(ManagerID);
 				    	 List<Employee> reportstoEmployee =temp1.getReports();
 				    	
 				    	if(reportstoEmployee != null) {
@@ -194,23 +209,23 @@ public class EmployeeController {
 						    		}
 						    		
 								   if(ManagerID!=null && ManagerID!=temp1.getManager().getId()) {
-										    	  Employee NewManager = this.EmployeeService.GetEmployee(ManagerID).get();
+										    	 
 										    	  Long EmployeeIDManager = NewManager.getEmployer().getId();
 										    	  
 										    	  if(EmployeeIDManager !=EmployerID) {
 										    		  return new ResponseEntity<>("The Employer and Manager doesnot belong to same company",HttpStatus.BAD_REQUEST);
 										    		  
-										    	  }
+									    	  }
 										    	  else {
-										    		  temp1.setManager(NewManager);
-										    	  }
+									    		  temp1.setManager(NewManager);
+									    	  }
 								    	  
 								      }
 								      else {
 								    	  temp1.setManager(null);
 								      }
 				
-				}
+			}
 				    	
 				temp1.setEmployer(this.EmployerService.GetEmployer(EmployerID));
 		    }
@@ -218,6 +233,7 @@ public class EmployeeController {
 		   
 		    this.EmployeeService.UpdateEmployee(temp1);
 		    return new ResponseEntity<>(temp1,HttpStatus.OK);
+    	
 		}
 		
 	   catch(NoSuchElementException e) {
@@ -234,9 +250,9 @@ public class EmployeeController {
  public ResponseEntity<?> DeleteEmployee(@PathVariable Long id) {
 	
 	try {
-		 Employee emp = this.EmployeeService.GetEmployee(id).get();
+		 Employee emp = this.EmployeeService.GetEmployee(id);
 		
-		 if(emp.getReports().size()==0)
+		 if(emp.getReports().size()!=0)
 		 {
 			 return new ResponseEntity<>("You Cannot Delete this Employee",HttpStatus.BAD_REQUEST);
 			 

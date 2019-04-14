@@ -2,7 +2,7 @@ package com.assignment.lab2.service;
 
 
 
-import java.util.Optional;
+//import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -20,9 +20,9 @@ public class EmployeeService {
 	EmployeeDao empDao;
 	
 	
-	public Optional<Employee> GetEmployee(Long empid){
-		//Employee rres=this.empDao.findById(empid).get();
-		return this.empDao.findById(empid);
+	public Employee GetEmployee(Long empid){
+		Employee rres=this.empDao.findById(empid).get();
+		return rres;
 	}
 	
 	public void DeleteEmployee(Long empid) {
