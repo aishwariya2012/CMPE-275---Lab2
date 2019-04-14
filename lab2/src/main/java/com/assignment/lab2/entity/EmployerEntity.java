@@ -25,15 +25,15 @@ public class EmployerEntity {
 
 	@Column
 	
-	@JsonProperty("Name")
+	@JsonProperty("name")
     private String name;
 	
 	@Column
-	@JsonProperty("Description")
+	@JsonProperty("description")
     private String description;
 	
     @Embedded
-    @JsonProperty("Address")
+    @JsonProperty("address")
     private AddressEntity address;
     
     

@@ -1,6 +1,7 @@
 package com.assignment.lab2.Controller;
 
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import com.assignment.lab2.entity.AddressEntity;
 import com.assignment.lab2.entity.*;
 import com.assignment.lab2.service.EmployeeService;
 import com.assignment.lab2.service.EmployerService;
+import com.assignment.lab2.dao.*;
 
 @RestController
 @RequestMapping("/")
@@ -31,12 +33,16 @@ public class EmployeeController {
 	@Autowired
 	EmployerService EmployerService;
 	
+	@Autowired
+	EmployerDao empDao;
+	
+	
 	@RequestMapping(value="employee", method=RequestMethod.POST, produces =MediaType.APPLICATION_JSON_VALUE)
 	
 	public ResponseEntity<?> addEmployee(
-			@RequestParam(value="name",required = true) String name,
-			@RequestParam(value="email",required = true) String email,
-			@RequestParam(value="title",required = false) String title,
+			 @RequestParam(value="name",required = true) String name,
+			 @RequestParam(value="email",required = true) String email,
+			 @RequestParam(value="title",required = false) String title,
 			 @RequestParam(value="street",required=false) String street,
     		 @RequestParam(value="city",required=false) String city, 
     		 @RequestParam(value="state",required=false) String state,
@@ -46,15 +52,31 @@ public class EmployeeController {
 			)
 	{
 		
-        AddressEntity address = new AddressEntity(city,street,state,zip);
-        
+        try{
+        	AddressEntity address = new AddressEntity(city,street,state,zip);
+        Employee ManagerDetails = null;
         EmployerEntity employer = this.EmployerService.GetEmployer(EmployerID);
+        System.out.print(employer);
         if(employer==null)
-        	return new ResponseEntity<>("Not A Valid Employeer,It is not created earlier",HttpStatus.BAD_REQUEST);
+        	return new ResponseEntity<>("Not A Valid Employeerearlier",HttpStatus.BAD_REQUEST);
+        if(ManagerID!=null) {
+        	 ManagerDetails = this.EmployeeService.GetEmployee(ManagerID);
+        	Long id = ManagerDetails.getEmployer().getId();
+        	if(id != EmployerID ) {
+        		return new ResponseEntity<>("Manager Id Not Valid",HttpStatus.BAD_REQUEST);
+        	}
+        	
+        }
         
-        
-		Employee employee = new Employee();
+		Employee employee = new Employee(name,email,title,address,employer,ManagerDetails);
+		System.out.print(employee);
 		return new ResponseEntity<Employee>(this.EmployeeService.AddEmployee(employee),HttpStatus.OK);
 	}
+        catch(NoSuchElementException e){
+        	 return new ResponseEntity<>("Not A Valid Employeer,It is not created earlier",HttpStatus.BAD_REQUEST);
+        
+        }
+	}
+        
 
 }

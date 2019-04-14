@@ -30,43 +30,50 @@ public class Employee {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
 	
+
 	@Column
-	@JsonProperty("Name")
+	@JsonProperty("name")
     private String name;
 	
 	@Column
-	@JsonProperty("Email")
+	@JsonProperty("email")
     private String email;
 	
 	@Column
-	@JsonProperty("Title")
+	@JsonProperty("title")
     private String title;
 	
 		
 	@Embedded
-	@JsonProperty("Address")
+	@JsonProperty("address")
     private AddressEntity address;
 	
 	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(referencedColumnName="id")
-	@JsonIgnoreProperties(value = {"Description","Address"})
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="employee_id")
+	@JsonIgnoreProperties(value = {"description","address"})
+	@JsonProperty("employer")
 	private EmployerEntity employer;
+	
+	
     
-    
+	@JsonIgnoreProperties(value = {"address"})
 	@ManyToOne(cascade={CascadeType.ALL})
-	@JoinColumn(name="manager_id",referencedColumnName="id")
+	@JoinColumn(name="manager_id")
+	@JsonProperty("manager")
     private Employee manager;	
 	
 	//@Column
 	@OneToMany(mappedBy="manager")
+	@JsonProperty("address")
     private List<Employee> reports;
   
-	@ManyToMany
+	@ManyToMany(cascade={CascadeType.PERSIST,CascadeType.MERGE})
 	@JoinTable(
 			joinColumns={@JoinColumn(name="id")},
 			inverseJoinColumns={@JoinColumn(name="collab_id")})
 	@JsonIgnoreProperties(value = {""})
+	@JsonProperty("collaborators")
 	private List<Employee> collaborators;
     
     
@@ -119,7 +126,7 @@ public class Employee {
 			// TODO Auto-generated constructor stub
 		}
 	public Employee(String name, String email, String title, AddressEntity address, EmployerEntity employer,
-			Employee manager, long id) {
+			Employee manager) {
 		super();
 		this.name = name;
 		this.email = email;
@@ -128,8 +135,19 @@ public class Employee {
 		this.employer = employer;
 		this.manager = manager;
 		
-		this.id = id;
+		
 	}
-	  
+	public List<Employee> getReports() {
+		return reports;
+	}
+	public void setReports(List<Employee> reports) {
+		this.reports = reports;
+	}
+	public List<Employee> getCollaborators() {
+		return collaborators;
+	}
+	public void setCollaborators(List<Employee> collaborators) {
+		this.collaborators = collaborators;
+	}
 	
 }

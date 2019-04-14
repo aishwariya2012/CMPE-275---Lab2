@@ -60,7 +60,7 @@ public class EmployeerController {
 		 //return new ResponseEntity<EmployerEntity>(HttpStatus.UNPROCESSABLE_ENTITY);
 		 
 		 EmployerEntity employer = new EmployerEntity(name, description, address);
-		 
+		 System.out.println("ok");
 //		 Employee employee = new Employee(name, email, title, (employer.isPresent())?employer.get():null, address);
 		 
          return new ResponseEntity<EmployerEntity>(this.EmployerService.AddEmployer(employer),HttpStatus.OK);
