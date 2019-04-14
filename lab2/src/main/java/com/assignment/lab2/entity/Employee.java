@@ -18,8 +18,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+//import com.fasterxml.jackson.annotation.JsonAutoDetect;
+//import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -53,7 +53,7 @@ public class Employee {
 	
 	
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name = "employee_id") 
+	@JoinColumn(name = "employer_id") 
 	@JsonIgnoreProperties(value = {"description","address"})
 	@JsonProperty("employer")						 
 	private EmployerEntity employer;
@@ -69,10 +69,10 @@ public class Employee {
 	//@Column
 	@OneToMany(mappedBy="manager")
 	@JsonProperty("reports")
-	@JsonIgnoreProperties(value = {"title","email","address","employer","manager","collaborators"})
+	@JsonIgnoreProperties(value = {"email","address","employer","manager","collaborators","reports"})
     private List<Employee> reports;
   
-	@ManyToMany()
+	@ManyToMany(cascade={CascadeType.PERSIST,CascadeType.MERGE})
 	@JoinTable(
 			joinColumns={@JoinColumn(name="id")},
 			inverseJoinColumns={@JoinColumn(name="collab_id")})

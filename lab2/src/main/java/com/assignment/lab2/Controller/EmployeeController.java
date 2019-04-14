@@ -1,7 +1,7 @@
 package com.assignment.lab2.Controller;
 
 
-import java.sql.SQLIntegrityConstraintViolationException;
+//import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -17,13 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+
 import org.springframework.web.bind.annotation.RestController;
 
 import com.assignment.lab2.entity.AddressEntity;
 import com.assignment.lab2.entity.*;
 import com.assignment.lab2.service.EmployeeService;
 import com.assignment.lab2.service.EmployerService;
+import com.assignment.lab2.service.CollaboratorService;
 
 
 
@@ -31,7 +32,7 @@ import com.assignment.lab2.dao.*;
 
 @RestController
 @RequestMapping("/")
-//@ResponseStatus(HttpStatus.NOT_FOUND)
+
 @CrossOrigin(origins = "*")
 public class EmployeeController {
 	
@@ -40,6 +41,9 @@ public class EmployeeController {
 	
 	@Autowired
 	EmployerService EmployerService;
+	
+	@Autowired
+	CollaboratorService CollaboratorService;
 	
 	@Autowired
 	EmployerDao empDao;
@@ -112,8 +116,8 @@ public class EmployeeController {
     		 @RequestParam(value="city",required=false) String city, 
     		 @RequestParam(value="state",required=false) String state,
     		 @RequestParam(value="zip", required=false) String zip,
-    		 @RequestParam(required = true) Long EmployerID,
-    		 @RequestParam(required = false) Long ManagerID
+    		 @RequestParam(value="EmployerID",required = true) Long EmployerID,
+    		 @RequestParam(value="ManagerID",required = false) Long ManagerID
 			 
 			 )
 	{
@@ -124,36 +128,49 @@ public class EmployeeController {
 		    }
 		    
 		    Employee temp1 = temp.get();
-		    if(name!=temp1.getName() && name!=null) {
+		    if(name!=null && name!=temp1.getName() ) {
 		    	temp1.setName(name);
 		    }
 		    
-		    if(email!=temp1.getEmail() && email!=null) {
+		    if(email!=null && email!=temp1.getEmail() ) {
 		    	temp1.setEmail(email);
 		    }
-		    if(title!=temp1.getTitle() && title!=null) {
+		    if( title!=null && title!=temp1.getTitle() ) {
 		    	temp1.setTitle(title);
 		    }
 		    
-		    if(street!=temp1.getAddress().getStreet() && street!=null) {
+		    if(street!=null && street!=temp1.getAddress().getStreet()) {
 		    	temp1.getAddress().setStreet(street);
 		    }
 		    
-		    if(city!=temp1.getAddress().getCity()  && city!=null) {
+		    if(city!=null && city!=temp1.getAddress().getCity()   ) {
 		    	temp1.getAddress().setCity(city);
 		    }
 		    
-		    if(state!=temp1.getAddress().getState() && street!=null) {
+		    if(state!=null && state!=temp1.getAddress().getState() ) {
 		    	temp1.getAddress().setState(state);
 		    }
 		    
-		    if(zip!=temp1.getAddress().getZip() && zip!=null) {
+		    if(zip!=null && zip!=temp1.getAddress().getZip() ) {
 		    	temp1.getAddress().setZip(zip);
 		    }
+		    
+		    //To change a Manager of a Employee if the employer is still the same
+	    	if( (ManagerID!=null) && (ManagerID != temp1.getManager().getId())  && (EmployerID==temp1.getEmployer().getId())) {
+	    		Employee NewManager = this.EmployeeService.GetEmployee(ManagerID).get();
+	    		Long EmployerIDManager = NewManager.getEmployer().getId();
+	    		if(EmployerIDManager != EmployerID) {
+	    			 return new ResponseEntity<>("The Manager doesnot belong to same company",HttpStatus.BAD_REQUEST);
+	    		}
+	    		else {
+	    			temp1.setManager(NewManager);
+	    		}
+	    	}
+	    	
 		  
 		    
 		    //CHange the employees EMployer
-		    if(! (EmployerID==temp1.getEmployer().getId()) && EmployerID!=null) {
+		    if(! (EmployerID==temp1.getEmployer().getId())) {
 		    	
 		    	System.out.println("INside thiS block");
 		    	
@@ -162,7 +179,7 @@ public class EmployeeController {
 				    	
 				    	if(reportstoEmployee != null) {
 						    		Employee manager = temp1.getManager();
-						    		if(manager !=null) {
+						    		if(manager!=null) {
 						    			for(int i=0;i<reportstoEmployee.size();i++) {
 						    				reportstoEmployee.get(i).setManager(manager);
 						    				this.EmployeeService.UpdateEmployee(reportstoEmployee.get(i));
@@ -198,18 +215,7 @@ public class EmployeeController {
 				temp1.setEmployer(this.EmployerService.GetEmployer(EmployerID));
 		    }
 		    	
-		    //To change a Manager of a Employee if the employer is still the same
-		    	if(ManagerID != temp1.getManager().getId() && ManagerID!=null && EmployerID==temp1.getEmployer().getId()) {
-		    		Employee NewManager = this.EmployeeService.GetEmployee(ManagerID).get();
-		    		Long EmployerIDManager = NewManager.getEmployer().getId();
-		    		if(EmployerIDManager != EmployerID) {
-		    			 return new ResponseEntity<>("The Manager doesnot belong to same company",HttpStatus.BAD_REQUEST);
-		    		}
-		    		else {
-		    			temp1.setManager(NewManager);
-		    		}
-		    	}
-		    	
+		   
 		    this.EmployeeService.UpdateEmployee(temp1);
 		    return new ResponseEntity<>(temp1,HttpStatus.OK);
 		}
@@ -220,7 +226,50 @@ public class EmployeeController {
 			
 		
 	}
+	
+
+	
+	
+@RequestMapping(value="employee/{id}", method=RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+ public ResponseEntity<?> DeleteEmployee(@PathVariable Long id) {
+	
+	try {
+		 Employee emp = this.EmployeeService.GetEmployee(id).get();
+		
+		 if(emp.getReports().size()==0)
+		 {
+			 return new ResponseEntity<>("You Cannot Delete this Employee",HttpStatus.BAD_REQUEST);
+			 
+		 }
+		 else
+		 {
+			 
+			List<Employee> collaborators= emp.getCollaborators();
+			
+			if(collaborators.size()!=0) {
+				
+				for(int i=0;i<collaborators.size();i++) {
+					Employee tempemp = collaborators.get(i);
+				    Long id2=tempemp.getId();
+				    this.CollaboratorService.CollaboratorsDeletion(id, id2);
+					
+			}
+			}
+			 this.EmployeeService.DeleteEmployee(id);
+			
+			 return new ResponseEntity<>(emp,HttpStatus.OK);
+			 
+		 }
+		 }
+		catch(NoSuchElementException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 }
+	
+
+
 	
         
 

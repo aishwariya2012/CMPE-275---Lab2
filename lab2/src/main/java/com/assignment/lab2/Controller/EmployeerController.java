@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+//import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.assignment.lab2.entity.AddressEntity;
 import com.assignment.lab2.entity.EmployerEntity;
-import com.assignment.lab2.service.EmployeeService;
+//import com.assignment.lab2.service.EmployeeService;
 import com.assignment.lab2.service.EmployerService;
 
 @RestController

@@ -47,7 +47,7 @@ public class CollaboratorController {
     @PathVariable(required = true) Long id2
     ){
 		if(cs.EmployeeCheck(id1, id2)) {
-			if(!cs.CollaborationCheck(id1, id1)) {
+			if(!cs.CollaborationCheck(id1, id2)) {
 				return new ResponseEntity<>("Not Collaborated Relation",HttpStatus.NOT_FOUND);
 			}
 			else {
