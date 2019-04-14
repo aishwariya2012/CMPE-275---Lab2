@@ -52,31 +52,45 @@ public class EmployeeController {
 			)
 	{
 		
-        try{
-        	AddressEntity address = new AddressEntity(city,street,state,zip);
-        Employee ManagerDetails = null;
-        EmployerEntity employer = this.EmployerService.GetEmployer(EmployerID);
-        System.out.print(employer);
-        if(employer==null)
-        	return new ResponseEntity<>("Not A Valid Employeerearlier",HttpStatus.BAD_REQUEST);
-        if(ManagerID!=null) {
-        	 ManagerDetails = this.EmployeeService.GetEmployee(ManagerID);
-        	Long id = ManagerDetails.getEmployer().getId();
-        	if(id != EmployerID ) {
-        		return new ResponseEntity<>("Manager Id Not Valid",HttpStatus.BAD_REQUEST);
-        	}
-        	
-        }
-        
-		Employee employee = new Employee(name,email,title,address,employer,ManagerDetails);
-		System.out.print(employee);
-		return new ResponseEntity<Employee>(this.EmployeeService.AddEmployee(employee),HttpStatus.OK);
+		        try{
+		        	AddressEntity address = new AddressEntity(city,street,state,zip);
+		        Employee ManagerDetails = null;
+		        EmployerEntity employer = this.EmployerService.GetEmployer(EmployerID);
+		        System.out.print(employer);
+		        if(employer==null)
+		        	return new ResponseEntity<>("Not A Valid Employeerearlier",HttpStatus.BAD_REQUEST);
+		        if(ManagerID!=null) {
+		        	 ManagerDetails = this.EmployeeService.GetEmployee(ManagerID);
+		        	Long id = ManagerDetails.getEmployer().getId();
+		        	if(id != EmployerID ) {
+		        		return new ResponseEntity<>("Manager Id Not Valid",HttpStatus.BAD_REQUEST);
+		        	}
+		        	
+		        }
+		        
+				Employee employee = new Employee(name,email,title,address,employer,ManagerDetails);
+				System.out.print(employee);
+				return new ResponseEntity<Employee>(this.EmployeeService.AddEmployee(employee),HttpStatus.OK);
+			}
+		        catch(NoSuchElementException e){
+		        	 return new ResponseEntity<>("Not A Valid Employeer,It is not created earlier",HttpStatus.BAD_REQUEST);
+		        
+		        }
 	}
-        catch(NoSuchElementException e){
-        	 return new ResponseEntity<>("Not A Valid Employeer,It is not created earlier",HttpStatus.BAD_REQUEST);
-        
-        }
+	
+	@RequestMapping(value="employee", method=RequestMethod.GET, produces =MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> GetEmployeeDetails(
+			@RequestParam(value="id",required = true) Long id)
+	{
+		try {
+			Employee temp =this.EmployeeService.GetEmployee(id) ;
+			return new ResponseEntity<Employee>(temp,HttpStatus.OK);
+					
+		}catch(NoSuchElementException e) {
+			return new ResponseEntity<>("Employee Not Found,Enter A Valid Value",HttpStatus.NOT_FOUND);
+		}
 	}
+	
         
 
 }

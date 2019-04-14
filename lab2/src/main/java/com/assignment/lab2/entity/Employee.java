@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Employee {
 
 	@Id
+	@JsonProperty("id")
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
 	
@@ -57,7 +58,7 @@ public class Employee {
 	
 	
     
-	@JsonIgnoreProperties(value = {"address"})
+	@JsonIgnoreProperties(value = {"email","address","employer","manager","reports","collaborators"})
 	@ManyToOne(cascade={CascadeType.ALL})
 	@JoinColumn(name="manager_id")
 	@JsonProperty("manager")
@@ -65,7 +66,8 @@ public class Employee {
 	
 	//@Column
 	@OneToMany(mappedBy="manager")
-	@JsonProperty("address")
+	@JsonProperty("reports")
+	@JsonIgnoreProperties(value = {"title","email","address","employer","manager","collaborators"})
     private List<Employee> reports;
   
 	@ManyToMany(cascade={CascadeType.PERSIST,CascadeType.MERGE})
@@ -76,55 +78,84 @@ public class Employee {
 	@JsonProperty("collaborators")
 	private List<Employee> collaborators;
     
-    
-   
+
 	public long getId() {
 		return id;
 	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public AddressEntity getAddress() {
 		return address;
 	}
+
 	public void setAddress(AddressEntity address) {
 		this.address = address;
 	}
+
 	public EmployerEntity getEmployer() {
 		return employer;
 	}
+
 	public void setEmployer(EmployerEntity employer) {
 		this.employer = employer;
 	}
+
 	public Employee getManager() {
 		return manager;
 	}
+
 	public void setManager(Employee manager) {
 		this.manager = manager;
 	}
 
-	  public Employee() {
-			super();
-			// TODO Auto-generated constructor stub
-		}
+	public List<Employee> getReports() {
+		return reports;
+	}
+
+	public void setReports(List<Employee> reports) {
+		this.reports = reports;
+	}
+
+	public List<Employee> getCollaborators() {
+		return collaborators;
+	}
+
+	public void setCollaborators(List<Employee> collaborators) {
+		this.collaborators = collaborators;
+	}
+
+	public Employee() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public Employee(String name, String email, String title, AddressEntity address, EmployerEntity employer,
 			Employee manager) {
 		super();
@@ -134,20 +165,9 @@ public class Employee {
 		this.address = address;
 		this.employer = employer;
 		this.manager = manager;
-		
-		
 	}
-	public List<Employee> getReports() {
-		return reports;
-	}
-	public void setReports(List<Employee> reports) {
-		this.reports = reports;
-	}
-	public List<Employee> getCollaborators() {
-		return collaborators;
-	}
-	public void setCollaborators(List<Employee> collaborators) {
-		this.collaborators = collaborators;
-	}
+
+   
+	
 	
 }
