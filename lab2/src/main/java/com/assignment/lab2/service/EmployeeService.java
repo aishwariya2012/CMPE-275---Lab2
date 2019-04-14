@@ -2,6 +2,8 @@ package com.assignment.lab2.service;
 
 
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +20,9 @@ public class EmployeeService {
 	EmployeeDao empDao;
 	
 	
-	public Employee GetEmployee(Long empid){
-		Employee rres=this.empDao.findById(empid).get();
-		return rres;
+	public Optional<Employee> GetEmployee(Long empid){
+		//Employee rres=this.empDao.findById(empid).get();
+		return this.empDao.findById(empid);
 	}
 	
 	public void DeleteEmployee(Long empid) {

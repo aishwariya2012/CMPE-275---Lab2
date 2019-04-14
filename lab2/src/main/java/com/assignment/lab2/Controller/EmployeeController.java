@@ -63,7 +63,7 @@ public class EmployeeController {
 		        System.out.print(employer);
 		       
 		        if(ManagerID!=null) {
-		        	 ManagerDetails = this.EmployeeService.GetEmployee(ManagerID);
+		        	 ManagerDetails = this.EmployeeService.GetEmployee(ManagerID).get();
 		        	Long id = ManagerDetails.getEmployer().getId();
 		        	if(id != EmployerID ) {
 		        		return new ResponseEntity<>("Manager Id Not Valid",HttpStatus.BAD_REQUEST);
@@ -90,14 +90,45 @@ public class EmployeeController {
 			@PathVariable(required = true) Long id)
 	{
 		try {
-			Employee temp =this.EmployeeService.GetEmployee(id) ;
-			return new ResponseEntity<Employee>(temp,HttpStatus.OK);
+			Optional<Employee> temp =this.EmployeeService.GetEmployee(id) ;
+			return new ResponseEntity<Employee>(temp.get(),HttpStatus.OK);
 					
 		}catch(NoSuchElementException e) {
 			return new ResponseEntity<>("Employee Not Found,Enter A Valid Value",HttpStatus.NOT_FOUND);
 		}
 	}
 	
+	@RequestMapping(value="employee", method=RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> UpdateEmployeeDetails(
+			 @PathVariable(required = true) Long id,
+			 @RequestParam(value="name",required = true) String name,
+			 @RequestParam(value="email",required = true) String email,
+			 @RequestParam(value="title",required = false) String title,
+			 @RequestParam(value="street",required=false) String street,
+    		 @RequestParam(value="city",required=false) String city, 
+    		 @RequestParam(value="state",required=false) String state,
+    		 @RequestParam(value="zip", required=false) String zip,
+    		 @RequestParam(required = true) Long EmployerID,
+    		 @RequestParam(required = false) Long ManagerID
+			 
+			 )
+	{
+		
+		   Optional <Employee> temp = this.EmployeeService.GetEmployee(id);
+		    if(!temp.isPresent()) {
+		    	return new ResponseEntity<>("Employee Not Found,Enter A Valid Value",HttpStatus.NOT_FOUND);
+		    }
+		    
+		    Employee temp1 = temp.get();
+		    if(name!=null)
+		    
+		    return new ResponseEntity<>("Employee Not Found,Enter A Valid Value",HttpStatus.NOT_FOUND);
+
+			
+		
+	}
+}
+	
         
 
-}
+
