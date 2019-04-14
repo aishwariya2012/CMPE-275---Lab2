@@ -98,7 +98,7 @@ public class EmployeeController {
 		}
 	}
 	
-	@RequestMapping(value="employee", method=RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="employee/{id}", method=RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> UpdateEmployeeDetails(
 			 @PathVariable(required = true) Long id,
 			 @RequestParam(value="name",required = true) String name,
@@ -120,9 +120,11 @@ public class EmployeeController {
 		    }
 		    
 		    Employee temp1 = temp.get();
-		    if(name!=null)
+		    if(name!=temp1.getName() && name!=null) {
+		    	
+		    }
 		    
-		    return new ResponseEntity<>("Employee Not Found,Enter A Valid Value",HttpStatus.NOT_FOUND);
+		    return new ResponseEntity<>(temp1,HttpStatus.OK);
 
 			
 		
