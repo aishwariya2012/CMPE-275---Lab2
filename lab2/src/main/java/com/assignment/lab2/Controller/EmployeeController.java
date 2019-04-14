@@ -1,10 +1,12 @@
 package com.assignment.lab2.Controller;
 
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +51,7 @@ public class EmployeeController {
     		 @RequestParam(value="city",required=false) String city, 
     		 @RequestParam(value="state",required=false) String state,
     		 @RequestParam(value="zip", required=false) String zip,
-    		 @RequestParam(required = true) long EmployerID,
+    		 @RequestParam(required = true) Long EmployerID,
     		 @RequestParam(required = false) Long ManagerID
 			)
 	{
@@ -76,6 +78,10 @@ public class EmployeeController {
 		        catch(NoSuchElementException e){
 		        	 return new ResponseEntity<>("Not A Valid Employeer,It is not created earlier",HttpStatus.BAD_REQUEST);
 		        
+		        }
+		        catch(DataIntegrityViolationException e ) {
+		        	return new ResponseEntity<>("Email ALready Exist",HttpStatus.BAD_REQUEST);
+		        	
 		        }
 	}
 	

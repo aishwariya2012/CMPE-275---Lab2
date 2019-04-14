@@ -12,19 +12,14 @@ import javax.persistence.Id;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-
 public class EmployerEntity {
 	//@JsonIgnoreProperties({"Name"})
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name = "id")
 	private long id;
-	
-	
-
 
 	@Column
-	
 	@JsonProperty("name")
     private String name;
 	

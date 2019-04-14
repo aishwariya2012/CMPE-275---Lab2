@@ -38,5 +38,33 @@ public class CollaboratorService {
 			}
 			
 	}
+	
+	public boolean CollaboratorsAddition(Long id1,Long id2){
+		Employee emp1 = this.employeeDao.findById(id1).get();
+		Employee emp2 = this.employeeDao.findById(id2).get();
+		
+		emp1.getCollaborators().add(emp2);
+			this.employeeDao.save(emp1);
+		
+		
+		emp2.getCollaborators().add(emp1);
+			this.employeeDao.save(emp2);
+		
+		
+		return true;
+	}
+	
+	public boolean CollaboratorsDeletion(Long id1,Long id2) {
+		Employee emp1 = this.employeeDao.findById(id1).get();
+		Employee emp2 = this.employeeDao.findById(id2).get();
+		
+		emp1.getCollaborators().remove(emp2);
+		this.employeeDao.save(emp1);
+		
+		emp2.getCollaborators().remove(emp1);
+		this.employeeDao.save(emp2);
+		
+		return true;
+	}
 
 }
