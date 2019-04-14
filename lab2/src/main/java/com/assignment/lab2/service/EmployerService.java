@@ -18,11 +18,12 @@ public class EmployerService {
 	EmployerDao empDao;
 	
 	
-	public Optional<EmployerEntity> GetEmployer(int empid){
-		return this.empDao.findById(empid);
+	public EmployerEntity GetEmployer(Long empid){
+		EmployerEntity res=empDao.findById(empid).get();
+		return res;
 	}
 	
-	public void DeleteEmployer(int empid) {
+	public void DeleteEmployer(Long empid) {
 		 this.empDao.deleteById(empid);
 	}
 	

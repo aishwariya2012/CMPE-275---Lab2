@@ -28,8 +28,8 @@ public class EmployeerController {
 	@Autowired
 	EmployerService EmployerService;
 	
-	@Autowired
-	EmployeeService EmployeeService;
+	//@Autowired
+	//EmployeeService EmployeeService;
 
 //	@GetMapping("/hello")
 //	public String hello() {
@@ -44,7 +44,8 @@ public class EmployeerController {
     		 @RequestParam(value="street",required=false) String street,
     		 @RequestParam(value="city",required=false) String city, 
     		 @RequestParam(value="state",required=false) String state,
-    		 @RequestParam(value="zip", required=false) String zip) {
+    		 @RequestParam(value="zip", required=false) String zip) 
+	 {
 		 
 		 
 		 if(name==null) {

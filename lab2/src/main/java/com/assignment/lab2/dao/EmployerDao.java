@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import com.assignment.lab2.entity.*;
 
 @Repository
-public interface EmployerDao extends JpaRepository<EmployerEntity,Integer> {
+public interface EmployerDao extends JpaRepository<EmployerEntity,Long> {
 
 }

@@ -28,6 +28,7 @@ public class Employee {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	private long id;
 	
 	@Column
 	@JsonProperty("Name")
@@ -69,7 +70,7 @@ public class Employee {
 	private List<Employee> collaborators;
     
     
-    private long id;
+   
 	public long getId() {
 		return id;
 	}
