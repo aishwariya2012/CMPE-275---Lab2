@@ -33,6 +33,10 @@ public class EmployeeService {
 		return this.empDao.save(employee);
 		
 	}
+	
+	public Employee UpdateEmployee(Employee employee) {
+		return this.empDao.save(employee);
+	}
 
 
 }

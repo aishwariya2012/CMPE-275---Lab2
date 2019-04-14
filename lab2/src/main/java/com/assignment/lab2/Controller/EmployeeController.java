@@ -2,6 +2,7 @@ package com.assignment.lab2.Controller;
 
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -23,6 +24,9 @@ import com.assignment.lab2.entity.AddressEntity;
 import com.assignment.lab2.entity.*;
 import com.assignment.lab2.service.EmployeeService;
 import com.assignment.lab2.service.EmployerService;
+
+
+
 import com.assignment.lab2.dao.*;
 
 @RestController
@@ -113,7 +117,7 @@ public class EmployeeController {
 			 
 			 )
 	{
-		
+		try {
 		   Optional <Employee> temp = this.EmployeeService.GetEmployee(id);
 		    if(!temp.isPresent()) {
 		    	return new ResponseEntity<>("Employee Not Found,Enter A Valid Value",HttpStatus.NOT_FOUND);
@@ -121,11 +125,98 @@ public class EmployeeController {
 		    
 		    Employee temp1 = temp.get();
 		    if(name!=temp1.getName() && name!=null) {
-		    	
+		    	temp1.setName(name);
 		    }
 		    
+		    if(email!=temp1.getEmail() && email!=null) {
+		    	temp1.setEmail(email);
+		    }
+		    if(title!=temp1.getTitle() && title!=null) {
+		    	temp1.setTitle(title);
+		    }
+		    
+		    if(street!=temp1.getAddress().getStreet() && street!=null) {
+		    	temp1.getAddress().setStreet(street);
+		    }
+		    
+		    if(city!=temp1.getAddress().getCity()  && city!=null) {
+		    	temp1.getAddress().setCity(city);
+		    }
+		    
+		    if(state!=temp1.getAddress().getState() && street!=null) {
+		    	temp1.getAddress().setState(state);
+		    }
+		    
+		    if(zip!=temp1.getAddress().getZip() && zip!=null) {
+		    	temp1.getAddress().setZip(zip);
+		    }
+		  
+		    
+		    //CHange the employees EMployer
+		    if(! (EmployerID==temp1.getEmployer().getId()) && EmployerID!=null) {
+		    	
+		    	System.out.println("INside thiS block");
+		    	
+		    	
+				    	 List<Employee> reportstoEmployee =temp1.getReports();
+				    	
+				    	if(reportstoEmployee != null) {
+						    		Employee manager = temp1.getManager();
+						    		if(manager !=null) {
+						    			for(int i=0;i<reportstoEmployee.size();i++) {
+						    				reportstoEmployee.get(i).setManager(manager);
+						    				this.EmployeeService.UpdateEmployee(reportstoEmployee.get(i));
+						    			}
+						    		}
+						    		else {
+						    			for(int i=0;i<reportstoEmployee.size();i++) {
+						    				reportstoEmployee.get(i).setManager(null);
+						    				this.EmployeeService.UpdateEmployee(reportstoEmployee.get(i));
+						    			}
+						    			
+						    		}
+						    		
+								   if(ManagerID!=null && ManagerID!=temp1.getManager().getId()) {
+										    	  Employee NewManager = this.EmployeeService.GetEmployee(ManagerID).get();
+										    	  Long EmployeeIDManager = NewManager.getEmployer().getId();
+										    	  
+										    	  if(EmployeeIDManager !=EmployerID) {
+										    		  return new ResponseEntity<>("The Employer and Manager doesnot belong to same company",HttpStatus.BAD_REQUEST);
+										    		  
+										    	  }
+										    	  else {
+										    		  temp1.setManager(NewManager);
+										    	  }
+								    	  
+								      }
+								      else {
+								    	  temp1.setManager(null);
+								      }
+				
+				}
+				    	
+				temp1.setEmployer(this.EmployerService.GetEmployer(EmployerID));
+		    }
+		    	
+		    //To change a Manager of a Employee if the employer is still the same
+		    	if(ManagerID != temp1.getManager().getId() && ManagerID!=null && EmployerID==temp1.getEmployer().getId()) {
+		    		Employee NewManager = this.EmployeeService.GetEmployee(ManagerID).get();
+		    		Long EmployerIDManager = NewManager.getEmployer().getId();
+		    		if(EmployerIDManager != EmployerID) {
+		    			 return new ResponseEntity<>("The Manager doesnot belong to same company",HttpStatus.BAD_REQUEST);
+		    		}
+		    		else {
+		    			temp1.setManager(NewManager);
+		    		}
+		    	}
+		    	
+		    this.EmployeeService.UpdateEmployee(temp1);
 		    return new ResponseEntity<>(temp1,HttpStatus.OK);
-
+		}
+		
+	   catch(NoSuchElementException e) {
+		   return new ResponseEntity<>("Employee Not Found",HttpStatus.NOT_FOUND);
+	   }
 			
 		
 	}
