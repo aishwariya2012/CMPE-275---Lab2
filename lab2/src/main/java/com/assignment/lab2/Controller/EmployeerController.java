@@ -69,7 +69,7 @@ public class EmployeerController {
          return new ResponseEntity<EmployerEntity>(this.EmployerService.AddEmployer(employer),HttpStatus.OK);
 	 }
 		 catch(DataIntegrityViolationException e ) {
-	        	return new ResponseEntity<>("Email ALready Exist",HttpStatus.BAD_REQUEST);
+	        	return new ResponseEntity<>("Name ALready Exist",HttpStatus.BAD_REQUEST);
 	        	
 	        }
 	 }
