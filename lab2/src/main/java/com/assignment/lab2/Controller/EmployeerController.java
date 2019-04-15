@@ -5,6 +5,7 @@ package com.assignment.lab2.Controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class EmployeerController {
     		 @RequestParam(value="state",required=false) String state,
     		 @RequestParam(value="zip", required=false) String zip) {
 		 
-		 
+		 try {
 		 if(name==null) {
 			 System.out.print("Name is empty");
 			 
@@ -66,6 +67,11 @@ public class EmployeerController {
 //		 Employee employee = new Employee(name, email, title, (employer.isPresent())?employer.get():null, address);
 		 
          return new ResponseEntity<EmployerEntity>(this.EmployerService.AddEmployer(employer),HttpStatus.OK);
+	 }
+		 catch(DataIntegrityViolationException e ) {
+	        	return new ResponseEntity<>("Email ALready Exist",HttpStatus.BAD_REQUEST);
+	        	
+	        }
 	 }
 	 
 	 @RequestMapping(value = "employer/{id}", method = RequestMethod.GET)
@@ -93,6 +99,8 @@ public class EmployeerController {
     		 @RequestParam(value="city",required=false) String city, 
     		 @RequestParam(value="state",required=false) String state,
     		 @RequestParam(value="zip", required=false) String zip) {
+		 
+		 try {
 		 Optional<EmployerEntity> optionalemployer = this.EmployerService.GetEmployer(id);
 //		 Optional<EmployerEntity> optionalemployer = this.EmployerService.GetEmployerByName(name);
 		 if(!optionalemployer.isPresent()) {
@@ -131,6 +139,12 @@ public class EmployeerController {
 			 }
 		 }
 	 }
+		 catch(DataIntegrityViolationException e ) {
+	        	return new ResponseEntity<>("Name ALready Exist",HttpStatus.BAD_REQUEST);
+	        	
+	        }
+	 }
+	 
 	 
 	 @RequestMapping(value = "employer/{id}", method = RequestMethod.DELETE, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 	 public ResponseEntity<?> deleteUser(

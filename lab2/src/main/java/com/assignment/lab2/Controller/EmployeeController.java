@@ -108,6 +108,10 @@ public class EmployeeController {
 		 
 			return new ResponseEntity<>("Employee Not Found,Enter A Valid Value",HttpStatus.NOT_FOUND);
 		}
+		catch(DataIntegrityViolationException e ) {
+        	return new ResponseEntity<>("Email ALready Exist",HttpStatus.BAD_REQUEST);
+        	
+        }	
 	}
 	
 	@RequestMapping(value="employee/{id}", method=RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
