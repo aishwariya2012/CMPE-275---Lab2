@@ -20,7 +20,7 @@ public class CollaboratorController {
 	CollaboratorService cs;
 	
 
-	@RequestMapping(value = "/collaborators/{id1}/{id2}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/collaborators/{id1}/{id2}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> CollaboratorsAddition(
     @PathVariable(required = true) Long id1,
     @PathVariable(required = true) Long id2
@@ -41,7 +41,7 @@ public class CollaboratorController {
 }
 	
 
-	@RequestMapping(value = "/collaborators/{id1}/{id2}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/collaborators/{id1}/{id2}", method = RequestMethod.DELETE, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> CollaboratorsDeletion(
     @PathVariable(required = true) Long id1,
     @PathVariable(required = true) Long id2

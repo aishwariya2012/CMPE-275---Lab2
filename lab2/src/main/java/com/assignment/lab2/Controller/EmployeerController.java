@@ -40,7 +40,7 @@ public class EmployeerController {
 //		emp.setName("ABC");
 //		return "HelloAish";
 //	}
-	 @RequestMapping(value = "employer", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	 @RequestMapping(value = "employer", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
      public ResponseEntity<?> addNewUser(
     		 @RequestParam(value="name",required = true) String name, 
     		 @RequestParam(value="description", required=false) String description, 
@@ -68,7 +68,7 @@ public class EmployeerController {
          return new ResponseEntity<EmployerEntity>(this.EmployerService.AddEmployer(employer),HttpStatus.OK);
 	 }
 	 
-	 @RequestMapping(value = "employer/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	 @RequestMapping(value = "employer/{id}", method = RequestMethod.GET)
 	 public ResponseEntity<?> getUser(
 			 @PathVariable(required = true) Long id) {
 //			 @RequestParam(value="id", required=true) long id) {
@@ -83,7 +83,7 @@ public class EmployeerController {
 		 
 	 }
 	 
-	 @RequestMapping(value = "employer/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	 @RequestMapping(value = "employer/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 	 public ResponseEntity<?> updateUser(
 			 @PathVariable(required = true) Long id,
 //			 @RequestParam(value="id", required=true) long id,
@@ -132,7 +132,7 @@ public class EmployeerController {
 		 }
 	 }
 	 
-	 @RequestMapping(value = "employer/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	 @RequestMapping(value = "employer/{id}", method = RequestMethod.DELETE, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 	 public ResponseEntity<?> deleteUser(
 			 @PathVariable(required = true) Long id) {
 //			 @RequestParam(value="id", required=true) long id){

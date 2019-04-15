@@ -17,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
 
 //import com.fasterxml.jackson.annotation.JsonAutoDetect;
 //import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -25,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 @Entity
+@XmlRootElement
 public class Employee {
 
 	@Id

@@ -1,7 +1,7 @@
 package com.assignment.lab2.Controller;
 
 
-//import java.sql.SQLIntegrityConstraintViolationException;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +50,7 @@ public class EmployeeController {
 	EmployerDao empDao;
 	
 	
-	@RequestMapping(value="employee", method=RequestMethod.POST, produces =MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="employee", method=RequestMethod.POST,produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 	
 	public ResponseEntity<?> addEmployee(
 			 @RequestParam(value="name",required = true) String name,
@@ -93,7 +94,8 @@ public class EmployeeController {
 		        }
 	}
 	
-	@RequestMapping(value="employee/{id}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	
+	@RequestMapping(value="employee/{id}", method=RequestMethod.GET,produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<?> GetEmployeeDetails(
 			@PathVariable(required = true) Long id)
 	{
@@ -103,11 +105,12 @@ public class EmployeeController {
 			return new ResponseEntity<Employee>(temp,HttpStatus.OK);
 					
 		}catch(NoSuchElementException e) {
+		 
 			return new ResponseEntity<>("Employee Not Found,Enter A Valid Value",HttpStatus.NOT_FOUND);
 		}
 	}
 	
-	@RequestMapping(value="employee/{id}", method=RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="employee/{id}", method=RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<?> UpdateEmployeeDetails(
 			 @PathVariable(required = true) Long id,
 			 @RequestParam(value="name",required = true) String name,
@@ -258,7 +261,7 @@ public class EmployeeController {
 
 	
 	
-@RequestMapping(value="employee/{id}", method=RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="employee/{id}", method=RequestMethod.DELETE, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
  public ResponseEntity<?> DeleteEmployee(@PathVariable Long id) {
 	
 	try {
