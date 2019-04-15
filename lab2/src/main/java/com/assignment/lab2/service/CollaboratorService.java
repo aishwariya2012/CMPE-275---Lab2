@@ -2,6 +2,8 @@ package com.assignment.lab2.service;
 
 import java.util.NoSuchElementException;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,7 @@ public class CollaboratorService {
 	@Autowired
 	EmployeeDao employeeDao;
 	
-	
+	@Transactional
 	public boolean EmployeeCheck(Long empid1,Long empid2) {
 		try {
 			Employee employee1 = this.employeeDao.findById(empid1).get();
@@ -25,6 +27,7 @@ public class CollaboratorService {
 		}
 	}
 	
+	@Transactional
 	public boolean CollaborationCheck(Long empid1,Long empid2) {
 		
 			Employee employee1 = this.employeeDao.findById(empid1).get();
@@ -39,6 +42,7 @@ public class CollaboratorService {
 			
 	}
 	
+	@Transactional
 	public boolean CollaboratorsAddition(Long id1,Long id2){
 		Employee emp1 = this.employeeDao.findById(id1).get();
 		Employee emp2 = this.employeeDao.findById(id2).get();
@@ -54,6 +58,7 @@ public class CollaboratorService {
 		return true;
 	}
 	
+	@Transactional
 	public boolean CollaboratorsDeletion(Long id1,Long id2) {
 		Employee emp1 = this.employeeDao.findById(id1).get();
 		Employee emp2 = this.employeeDao.findById(id2).get();

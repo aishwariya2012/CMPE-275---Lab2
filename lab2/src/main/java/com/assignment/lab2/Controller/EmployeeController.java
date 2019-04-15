@@ -93,7 +93,7 @@ public class EmployeeController {
 		        }
 	}
 	
-	@RequestMapping(value="employee/{id}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="employee/{id}", method=RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<?> GetEmployeeDetails(
 			@PathVariable(required = true) Long id)
 	{
@@ -187,29 +187,36 @@ public class EmployeeController {
 		    //CHange the employees EMployer
 		    if(! (EmployerID==temp1.getEmployer().getId())) {
 		    	
-		    	System.out.println("INside thiS block");
+		    
 		    	
-		    	         Employee NewManager = this.EmployeeService.GetEmployee(ManagerID);
+		    	        
 				    	 List<Employee> reportstoEmployee =temp1.getReports();
-				    	
-				    	if(reportstoEmployee != null) {
+				    		//System.out.println(""+reportstoEmployee.size());
+				    	if(reportstoEmployee != null ) {
 						    		Employee manager = temp1.getManager();
 						    		if(manager!=null) {
 						    			for(int i=0;i<reportstoEmployee.size();i++) {
 						    				reportstoEmployee.get(i).setManager(manager);
 						    				this.EmployeeService.UpdateEmployee(reportstoEmployee.get(i));
+						    				
 						    			}
 						    		}
 						    		else {
 						    			for(int i=0;i<reportstoEmployee.size();i++) {
 						    				reportstoEmployee.get(i).setManager(null);
 						    				this.EmployeeService.UpdateEmployee(reportstoEmployee.get(i));
+						    				
 						    			}
+						    			
+						    		}
+						    		int value=reportstoEmployee.size();
+						    		for(int i=0;i< value;i++) {
+						    			temp1.getReports().remove(reportstoEmployee.get(i));
 						    			
 						    		}
 						    		
 								   if(ManagerID!=null && ManagerID!=temp1.getManager().getId()) {
-										    	 
+									              Employee NewManager = this.EmployeeService.GetEmployee(ManagerID);
 										    	  Long EmployeeIDManager = NewManager.getEmployer().getId();
 										    	  
 										    	  if(EmployeeIDManager !=EmployerID) {
@@ -224,6 +231,7 @@ public class EmployeeController {
 								      else {
 								    	  temp1.setManager(null);
 								      }
+								   
 				
 			}
 				    	
