@@ -19,7 +19,7 @@ public class EmployerEntity {
 	@Column(name = "id")
 	private long id;
 
-	@Column
+	@Column(unique=true)
 	@JsonProperty("name")
     private String name;
 	

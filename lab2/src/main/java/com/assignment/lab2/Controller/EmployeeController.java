@@ -67,7 +67,7 @@ public class EmployeeController {
 		        try{
 		        	AddressEntity address = new AddressEntity(city,street,state,zip);
 		        Employee ManagerDetails = null;
-		        EmployerEntity employer = this.EmployerService.GetEmployer(EmployerID);
+		        EmployerEntity employer = this.EmployerService.GetEmployer(EmployerID).get();
 		        System.out.print(employer);
 		       
 		        if(ManagerID!=null) {
@@ -93,10 +93,11 @@ public class EmployeeController {
 		        }
 	}
 	
-	@RequestMapping(value="employee/{id}", method=RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE})
+	@RequestMapping(value="employee/{id}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> GetEmployeeDetails(
 			@PathVariable(required = true) Long id)
 	{
+		
 		try {
 			Employee temp =this.EmployeeService.GetEmployee(id) ;
 			return new ResponseEntity<Employee>(temp,HttpStatus.OK);
@@ -235,7 +236,7 @@ public class EmployeeController {
 				
 			}
 				    	
-				temp1.setEmployer(this.EmployerService.GetEmployer(EmployerID));
+				temp1.setEmployer(this.EmployerService.GetEmployer(EmployerID).get());
 		    }
 		    	
 		   
@@ -247,7 +248,10 @@ public class EmployeeController {
 	   catch(NoSuchElementException e) {
 		   return new ResponseEntity<>("Employee Not Found",HttpStatus.NOT_FOUND);
 	   }
-			
+		 catch(DataIntegrityViolationException e ) {
+	        	return new ResponseEntity<>("Email ALready Exist",HttpStatus.BAD_REQUEST);
+	        	
+	        }	
 		
 	}
 	
@@ -286,7 +290,7 @@ public class EmployeeController {
 		 }
 		 }
 		catch(NoSuchElementException e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("EmployeeNotFound",HttpStatus.NOT_FOUND);
 		}
 	}
 	

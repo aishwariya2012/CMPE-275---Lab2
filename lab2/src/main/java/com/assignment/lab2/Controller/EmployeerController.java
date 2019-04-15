@@ -75,7 +75,7 @@ public class EmployeerController {
 		 
 		 Optional<EmployerEntity> optionalemployer = this.EmployerService.GetEmployer(id);
 		 if(!optionalemployer.isPresent()) {
-			 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			 return new ResponseEntity<>("Employer Not Found Enter Valid Value",HttpStatus.NOT_FOUND);
 		 } else {
 			 EmployerEntity employer = optionalemployer.get();
 			 return new ResponseEntity<EmployerEntity>(employer, HttpStatus.OK);
@@ -85,7 +85,7 @@ public class EmployeerController {
 	 
 	 @RequestMapping(value = "employer/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	 public ResponseEntity<?> updateUser(
-			 @PathVariable(required = true) Long id),
+			 @PathVariable(required = true) Long id,
 //			 @RequestParam(value="id", required=true) long id,
 			 @RequestParam(value="name",required = true) String name, 
     		 @RequestParam(value="description", required=false) String description, 
@@ -137,13 +137,14 @@ public class EmployeerController {
 			 @PathVariable(required = true) Long id) {
 //			 @RequestParam(value="id", required=true) long id){
 		 if(this.EmployerService.EmployerExists(id)) {
-			 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			 return new ResponseEntity<>("Employer Cannot be deleted because it belongs to one or more employees currently",HttpStatus.BAD_REQUEST);
 		 }
 		 Optional<EmployerEntity> optionalemployer = this.EmployerService.DeleteEmployer(id);
 		 if(!optionalemployer.isPresent()) {
-			 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			 return new ResponseEntity<>("Employer not Found",HttpStatus.NOT_FOUND);
 		 } else {
 			 EmployerEntity employer = optionalemployer.get();
 			 return new ResponseEntity<EmployerEntity>(employer, HttpStatus.OK);
 		 }
+}
 }
